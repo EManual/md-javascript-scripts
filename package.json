@@ -1,0 +1,19 @@
+{
+  "name": "md-javascript-scripts",
+  "version": "1.0.0",
+  "description": "all scripts that deal with the PHP module",
+  "main": "fix_jeklly.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EManual/md-javascript-scripts.git"
+  },
+  "author": "Jayin Ton",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/EManual/md-javascript-scripts/issues"
+  },
+  "homepage": "https://github.com/EManual/md-javascript-scripts#readme"
+}
