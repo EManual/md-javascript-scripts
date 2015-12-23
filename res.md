@@ -625,7 +625,8 @@ var files = fileSelect.files;
 
 然后，新建一个FormData对象的实例，用来模拟发送到服务器的表单数据，把选中的文件添加到这个对象上面。
 
-{% highlight javascript %}
+```javascript
+
 
 var formData = new FormData();
 
@@ -639,11 +640,12 @@ for (var i = 0; i < files.length; i++) {
   formData.append('photos[]', file, file.name);
 }
 
-{% endhighlight %}
+```
 
 上面代码中的FormData对象的append方法，除了可以添加文件，还可以添加二进制对象（Blob）或者字符串。
 
-{% highlight javascript %}
+```javascript
+
 
 // Files
 formData.append(name, file, filename);
@@ -654,13 +656,14 @@ formData.append(name, blob, filename);
 // Strings
 formData.append(name, value);    
 
-{% endhighlight %}
+```
 
 append方法的第一个参数是表单的控件名，第二个参数是实际的值，第三个参数是可选的，通常是文件名。
 
 最后，使用Ajax方法向服务器上传文件。
 
-{% highlight javascript %}
+```javascript
+
 
 var xhr = new XMLHttpRequest();
 
@@ -674,7 +677,7 @@ xhr.onload = function () {
 
 xhr.send(formData);
 
-{% endhighlight %}
+```
 
 目前，各大浏览器（包括IE 10）都支持Ajax上传文件。
 
@@ -697,7 +700,8 @@ xhr.send(file);
 
 JSONP是一种常见做法，用于服务器与客户端之间的数据传输，主要为了规避浏览器的同域限制。因为Ajax只能向当前网页所在的域名发出HTTP请求（除非使用下文要提到的CORS，但并不是所有服务器都支持CORS），所以JSONP就采用在网页中动态插入script元素的做法，向服务器请求脚本文件。
 
-{% highlight javascript %}
+```javascript
+
 
 function addScriptTag(src){
 	var script = document.createElement('script');
@@ -714,7 +718,7 @@ function foo(data) {
     console.log('Your public IP address is: ' + data.ip);
 };
 
-{% endhighlight %}
+```
 
 上面代码使用了JSONP，运行以后当前网页就可以直接处理example.com返回的数据了。
 
@@ -722,29 +726,32 @@ function foo(data) {
 
 请看下面的例子，假定访问 http://example.com/ip ，返回如下JSON数据：
 
-{% highlight javascript %}
+```javascript
+
 
 {"ip":"8.8.8.8"}
 
-{% endhighlight %}
+```
 
 现在服务器允许客户端请求时使用callback参数指定回调函数。访问 http://example.com/ip?callback=foo ，返回的数据变成：
 
-{% highlight javascript %}
+```javascript
+
 
 foo({"ip":"8.8.8.8"})
 
-{% endhighlight %}
+```
 
 这时，如果客户端定义了foo函数，该函数就会被立即调用，而作为参数的JSON数据被视为JavaScript对象，而不是字符串，因此避免了使用JSON.parse的步骤。
 
-{% highlight javascript %}
+```javascript
+
 
 function foo(data) {
     console.log('Your public IP address is: ' + data.ip);
 };
 
-{% endhighlight %}
+```
 
 jQuery的getJSON方法就是JSONP的一个应用。
 
@@ -762,7 +769,8 @@ CORS的全称是“跨域资源共享”（Cross-origin resource sharing），�
 
 所有主流浏览器都支持该方法，不过IE8和IE9的该方法不是部署在XMLHttpRequest对象，而是部署在XDomainRequest对象。检查浏览器是否支持的代码如下：
 
-{% highlight javascript %}
+```javascript
+
 
 var request = new XMLHttpRequest();
 
@@ -770,13 +778,14 @@ if("withCredentials" in request) {
   // 发出跨域请求
 }
 
-{% endhighlight %}
+```
 
 CORS的原理其实很简单，就是增加一条HTTP头信息的查询，询问服务器端，当前请求的域名是否在许可名单之中，以及可以使用哪些HTTP动词。如果得到肯定的答复，就发出XMLHttpRequest请求。这种机制叫做“预检”（preflight）。
 
 “预检”的专用HTTP头信息是Origin。假定用户正在浏览来自www.example.com的网页，该网页需要向Google请求数据，这时浏览器会向该域名询问是否同意跨域请求，发出的HTTP头信息如下：
 
-{% highlight http %}
+```http
+
 
 OPTIONS /resources/post-here/ HTTP/1.1
 Host: www.google.com
@@ -790,7 +799,7 @@ Origin: http://www.example.com
 Access-Control-Request-Method: POST
 Access-Control-Request-Headers: X-PINGOTHER
 
-{% endhighlight %}
+```
 
 上面的HTTP请求，它的动词是OPTIONS，表示这是一个“预检”请求。除了提供浏览器信息，里面关键的一行是Origin头信息。
 
@@ -833,21 +842,23 @@ Content-Type: text/plain
 
 上面的HTTP回应里面，关键的是Access-Control-Allow-Origin头信息。这表示服务器同意www.example.com的跨域请求。
 
-{% highlight http %}
+```http
+
 
 Access-Control-Allow-Origin: http://www.example.com
 
-{% endhighlight %}
+```
 
 如果不同意，服务器端会返回一个错误。
 
 如果服务器端对所有网站都开放，可以返回一个星号（*）通配符。
 
-{% highlight http %}
+```http
+
 
 Access-Control-Allow-Origin: *
 
-{% endhighlight %}
+```
 
 服务器还告诉浏览器，允许的HTTP动词是POST、GET、OPTIONS，也允许自定义的头信息X-PINGOTHER，
 
@@ -865,20 +876,22 @@ Access-Control-Max-Age: 1728000
 
 CORS机制默认不发送cookie和HTTP认证信息，除非在Ajax请求中打开withCredentials属性。
 
-{% highlight javascript %}
+```javascript
+
 
 var request = new XMLHttpRequest();
 request.withCredentials = true;
 
-{% endhighlight %}
+```
 
 同时，服务器返回HTTP头信息时，也必须打开Access-Control-Allow-Credentials选项。否则，浏览器会忽略服务器返回的回应。
 
-{% highlight http %}
+```http
+
 
 Access-Control-Allow-Credentials: true
 
-{% endhighlight %}
+```
 
 需要注意的是，此时Access-Control-Allow-Origin不能指定为星号，必须指定明确的、与请求网页一致的域名。同时，cookie依然遵循同源政策，只有用服务器域名（前例是www.google.com）设置的cookie才会上传，其他域名下的cookie并不会上传，且网页代码中的document.cookie也无法读取www.google.com域名下的cookie。
 
